@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Agent : MonoBehaviour
 {
@@ -33,16 +31,15 @@ public class Agent : MonoBehaviour
 
         path = null;
         currentDestination = null;
-    }
 
-    private void Start()
-    {  
+        OnAwaken();
     }
 
     private void Update()
     {
-        IntegrateMovement();
+        OnUpdate();
 
+        IntegrateMovement();
         if (path == null || path.Count == 0)
         {
             return;
@@ -54,7 +51,6 @@ public class Agent : MonoBehaviour
         {
             path.Pop();
         }
-
         Vector3 destination = new Vector3(
             currentDestination.Position.x,
             transform.position.y,
@@ -66,6 +62,11 @@ public class Agent : MonoBehaviour
     {
         path = PathfindingManager.Instance.CreatePath(transform.position,
             new Vector3(destination.x, transform.position.y, destination.z));
+    }
+
+    public bool IsInDestination()
+    {
+        return (path == null) || path.Count == 0;
     }
 
     private void MoveTo(Vector3 position)
@@ -85,6 +86,9 @@ public class Agent : MonoBehaviour
 
         forceAccumulator = Vector3.zero;
     }
+
+    protected virtual void OnAwaken() { }
+    protected virtual void OnUpdate() { }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

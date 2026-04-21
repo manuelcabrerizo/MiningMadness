@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gem
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ac495f64b4e5ef34da969bad438c990d, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -59,6 +63,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac495f64b4e5ef34da969bad438c990d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4967611069351522632}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ac495f64b4e5ef34da969bad438c990d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1251270702746009681}
   m_SourcePrefab: {fileID: 100100000, guid: ac495f64b4e5ef34da969bad438c990d, type: 3}
 --- !u!1 &6637732410096653405 stripped
 GameObject:
@@ -86,3 +93,15 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.5
   m_Center: {x: 0, y: -0.42, z: 0}
+--- !u!114 &1251270702746009681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637732410096653405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abf2a124f1bc3e459feafff58f3e03b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
