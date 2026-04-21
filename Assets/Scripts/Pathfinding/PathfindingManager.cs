@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PathfindingManager : MonoBehaviourSingleton<PathfindingManager>
@@ -19,6 +20,13 @@ public class PathfindingManager : MonoBehaviourSingleton<PathfindingManager>
         }
         openNodes = new List<PathNode>();
         closeNodes = new List<PathNode>();
+
+        EventBus.Instance.Subscribe<ChangePathfindingStrategyEvent>(OnPathfindingStrategyChange);
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.Instance.Unsubscribe<ChangePathfindingStrategyEvent>(OnPathfindingStrategyChange);
     }
 
     private void OnDrawGizmos()
@@ -33,6 +41,25 @@ public class PathfindingManager : MonoBehaviourSingleton<PathfindingManager>
             {
                 Gizmos.DrawLine(node.Position, adjacentNode.Position);
             }
+        }
+    }
+
+    private void OnPathfindingStrategyChange(in ChangePathfindingStrategyEvent changePathfindingStrategyEvent)
+    {
+        switch(changePathfindingStrategyEvent.StrategyType)
+        {
+            case PathfindingStrategyType.DepthFirst:
+                strategy = new DepthFirst(); 
+                break;
+            case PathfindingStrategyType.BreadthFirst:
+                strategy = new BreadthFirst();
+                break;
+            case PathfindingStrategyType.Dijkstra:
+                strategy = new Dijkstra();
+                break;
+            case PathfindingStrategyType.AStart:
+                strategy = new AStart();
+                break;
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,9 @@ public class Agent : MonoBehaviour
 
     private Stack<PathNode> path;
 
+    private Vector3 destination;
     private PathNode currentDestination;
+
 
     private void Awake()
     {
@@ -30,9 +33,21 @@ public class Agent : MonoBehaviour
         forceAccumulator = Vector3.zero;
 
         path = null;
+        destination = Vector3.zero;
         currentDestination = null;
 
         OnAwaken();
+    }
+
+    private void Start()
+    {
+        EventBus.Instance.Subscribe<ChangePathfindingStrategyEvent>(OnPathfindingStrategyChange);
+        OnStart();
+    }
+
+    private void OnDestroy()
+    {
+        EventBus.Instance.Unsubscribe<ChangePathfindingStrategyEvent>(OnPathfindingStrategyChange);
     }
 
     private void Update()
@@ -58,8 +73,18 @@ public class Agent : MonoBehaviour
         MoveTo(destination);
     }
 
+    private void OnPathfindingStrategyChange(in ChangePathfindingStrategyEvent callback)
+    {
+        if (path != null && path.Count != 0)
+        {
+            path = PathfindingManager.Instance.CreatePath(transform.position,
+                new Vector3(destination.x, transform.position.y, destination.z));
+        }
+    }
+
     public void SetDestination(Vector3 destination)
     {
+        this.destination = destination;
         path = PathfindingManager.Instance.CreatePath(transform.position,
             new Vector3(destination.x, transform.position.y, destination.z));
     }
@@ -88,6 +113,7 @@ public class Agent : MonoBehaviour
     }
 
     protected virtual void OnAwaken() { }
+    protected virtual void OnStart() { }
     protected virtual void OnUpdate() { }
 
 #if UNITY_EDITOR

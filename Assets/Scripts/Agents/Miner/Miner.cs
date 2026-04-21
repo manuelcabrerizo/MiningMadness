@@ -1,8 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Miner : Agent
 {
+    private static int generation = 0;
+
     public UnityEvent onGemFound;
     public UnityEvent onGemReach;
     public UnityEvent onGemCollected;
@@ -12,7 +15,11 @@ public class Miner : Agent
     public LayerMask baseLayer;
 
     public Gem TargetGem { get; set; } = null;
+    public int Id => id;
+    public Color Color => color;
 
+    private int id;
+    private Color color;
     private FsmStateMachine<Miner> fsm = null;
     private MinerIdleState idleState = null;
     private MinerMoveToGemState moveToGemState = null;
@@ -40,6 +47,14 @@ public class Miner : Agent
         fsm.ConfigureTransition(moveToGemState, miningState, onGemReach);
         fsm.ConfigureTransition(miningState, depositGoldState, onGemCollected);
         fsm.ConfigureTransition(depositGoldState, idleState, onGemDeposited);
+
+        id = generation++;
+        color = Random.ColorHSV();
+    }
+
+    protected override void OnStart()
+    {
+        EventBus.Instance.Raise<MinerSpawnEvent>(id, color);
     }
 
     protected override void OnUpdate()
