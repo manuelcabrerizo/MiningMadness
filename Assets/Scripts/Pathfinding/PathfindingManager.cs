@@ -12,7 +12,7 @@ public class PathfindingManager : MonoBehaviourSingleton<PathfindingManager>
 
     private void Awake()
     {
-        strategy = new Dijkstra();
+        strategy = new AStart();
         if (pathNodes == null)
         {
             GeneratePath();
