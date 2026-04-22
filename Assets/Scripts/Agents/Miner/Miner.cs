@@ -44,9 +44,16 @@ public class Miner : Agent
         moveToBaseState.Initialize(this);
         depositGoldState.Initialize(this);
 
+        id = generation++;
+        color = Random.ColorHSV();
+        gemsAmount = 0;
+    }
+
+    protected override void OnStart()
+    {
         fsm = new FsmStateMachine<Miner>(
             new FsmState<Miner>[] { idleState, moveToGemState, miningState, moveToBaseState, depositGoldState },
-            new UnityEvent[] { onGemFound, onGemReach, onGemCollected, onBaseReach,  onGemDeposited },
+            new UnityEvent[] { onGemFound, onGemReach, onGemCollected, onBaseReach, onGemDeposited },
             idleState);
 
         fsm.ConfigureTransition(idleState, moveToGemState, onGemFound);
@@ -55,13 +62,6 @@ public class Miner : Agent
         fsm.ConfigureTransition(moveToBaseState, depositGoldState, onBaseReach);
         fsm.ConfigureTransition(depositGoldState, idleState, onGemDeposited);
 
-        id = generation++;
-        color = Random.ColorHSV();
-        gemsAmount = 0;
-    }
-
-    protected override void OnStart()
-    {
         EventBus.Instance.Raise<MinerSpawnEvent>(id, color);
     }
 

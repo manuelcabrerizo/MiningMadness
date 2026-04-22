@@ -18,8 +18,8 @@ public class FsmStateMachine<T>
             return;
 
         currentState.OnExit();
-        targetState.OnEnter();
         currentState = targetState;
+        currentState.OnEnter();
     }
 
     public void Update(float deltaTime)
