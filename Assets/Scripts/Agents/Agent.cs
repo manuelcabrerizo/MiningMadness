@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Agent : MonoBehaviour
 {
+    [SerializeField] private string[] affectedByTags;
+
     private float speed;
     private float rotationSpeed;
     private float damping;
@@ -72,6 +74,28 @@ public class Agent : MonoBehaviour
             transform.position.y,
             currentDestination.Position.z);
         MoveTo(destination);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        foreach (string slowDownTag in affectedByTags)
+        {
+            if (slowDownTag == other.gameObject.tag)
+            {
+                speed /= 4.0f;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        foreach (string slowDownTag in affectedByTags)
+        {
+            if (slowDownTag == other.gameObject.tag)
+            {
+                speed *= 4.0f;
+            }
+        }
     }
 
     private void OnPathfindingStrategyChange(in ChangePathfindingStrategyEvent callback)

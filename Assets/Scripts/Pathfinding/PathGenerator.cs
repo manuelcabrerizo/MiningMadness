@@ -38,6 +38,7 @@ public class PathGenerator
                     {
                         if (hitInfo.collider.CompareTag(terrainLayer.Tag))
                         {
+                            Debug.Log(terrainLayer.Tag);
                             nodes.Add(GenerateNewNode(hitInfo, terrainLayer.CostMultiplier));
                             break;
                         }
@@ -46,7 +47,7 @@ public class PathGenerator
             }
         }
         float separationSqr = nodeSeparation * nodeSeparation;
-        float maxSqrDistance = separationSqr + separationSqr;
+        float maxSqrDistance = (separationSqr + separationSqr) + 0.01f;
         foreach (PathNode node in nodes)
         {
             node.AdjacentNodes = nodes.FindAll(n => AreNodeAdjacent(node, n, maxSqrDistance));
