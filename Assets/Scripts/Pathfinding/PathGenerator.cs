@@ -38,7 +38,6 @@ public class PathGenerator
                     {
                         if (hitInfo.collider.CompareTag(terrainLayer.Tag))
                         {
-                            Debug.Log(terrainLayer.Tag);
                             nodes.Add(GenerateNewNode(hitInfo, terrainLayer.CostMultiplier));
                             break;
                         }

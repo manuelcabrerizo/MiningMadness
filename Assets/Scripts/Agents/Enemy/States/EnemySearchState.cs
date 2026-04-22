@@ -13,7 +13,6 @@ public class EnemySearchState : FsmState<Enemy>
         Collider[] colliders = Physics.OverlapSphere(owner.transform.position, searchRadius, owner.minerLayer);
         if (colliders.Length == 0)
         {
-            Debug.Log("Miner Not Found");
             owner.onMinerNotFound?.Invoke();
         }
         else
@@ -34,12 +33,10 @@ public class EnemySearchState : FsmState<Enemy>
             {
                 Miner miner = targetTransform.GetComponent<Miner>();
                 owner.TargetMiner = miner;
-                Debug.Log("Miner Found");
                 owner.onMinerFound?.Invoke();
             }
             else
             {
-                Debug.Log("Miner Not Found");
                 owner.onMinerNotFound?.Invoke();
             }
         }

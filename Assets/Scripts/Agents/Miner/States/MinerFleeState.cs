@@ -5,8 +5,8 @@ using UnityEngine.UIElements;
 public class MinerFleeState : FsmState<Miner>
 {
     private TaskScheduler taskScheduler = null;
-    private float safeRadius = 5.0f;
-    private float checkForEnemiesInterval = 2.0f;
+    private float safeRadius = 2.5f;
+    private float checkForEnemiesInterval = 0.25f;
 
     public override void OnInitialize()
     {
@@ -42,7 +42,7 @@ public class MinerFleeState : FsmState<Miner>
     {
         Vector2 randomPoint = Random.insideUnitCircle.normalized;
         Vector3 direction = new Vector3(randomPoint.x, 0.0f, randomPoint.y);
-        Vector3 destination = owner.transform.position + direction * Random.Range(10, 20);
+        Vector3 destination = owner.transform.position + direction * Random.Range(20, 30);
         owner.SetDestination(destination);
     }
 

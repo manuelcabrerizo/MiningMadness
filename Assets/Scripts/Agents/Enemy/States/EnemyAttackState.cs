@@ -4,11 +4,11 @@ using UnityEngine;
 public class EnemyAttackState : FsmState<Enemy>
 {
     TaskScheduler taskScheduler = null;
-    private float updateMinerPositionRatio = 1.0f;
+    private float updateMinerPositionRatio = 1.5f;
     private float minerScapeDistance = 10.0f;
     private float attackRadio = 5.0f;
     private float attackTimeRatio = 0.5f;
-    private int attackForce = 10;
+    private int attackForce = 2;
 
     public override void OnInitialize()
     {
