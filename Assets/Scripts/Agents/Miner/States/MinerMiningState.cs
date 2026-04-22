@@ -1,7 +1,10 @@
+using System;
+
 public class MinerMiningState : FsmState<Miner>
 {
     private TaskScheduler taskScheduler = null;
-    private float miningTimeDuration = 4.0f;
+    private float gemsCollectionRatio = 2.0f;
+    private float miningTimeDuration = 11.0f;
 
     public override void OnInitialize()
     {
@@ -10,12 +13,15 @@ public class MinerMiningState : FsmState<Miner>
 
     public override void OnEnter()
     {
-        taskScheduler.Schedule(CollectGem, miningTimeDuration);
+        taskScheduler.Schedule(CollectGem, gemsCollectionRatio);
+        taskScheduler.Schedule(FinishCollecting, miningTimeDuration);
     }
 
     public override void OnExit()
     {
         taskScheduler.Clear();
+        owner.TargetGem.Release();
+        owner.TargetGem = null;
     }
 
     public override void OnUpdate(float deltaTime)
@@ -24,6 +30,12 @@ public class MinerMiningState : FsmState<Miner>
     }
 
     private void CollectGem()
+    {
+        owner.AddGems(2);
+        taskScheduler.Schedule(CollectGem, gemsCollectionRatio);
+    }
+
+    private void FinishCollecting()
     {
         owner.onGemCollected?.Invoke();
     }

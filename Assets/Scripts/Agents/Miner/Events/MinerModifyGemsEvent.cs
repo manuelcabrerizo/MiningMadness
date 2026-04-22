@@ -1,12 +1,10 @@
-using UnityEngine;
-
-public class MinerSpawnEvent : Event
+public class MinerModifyGemsEvent : Event
 {
     public int Id;
-    public Color Color;
+    public int Amount;
     public override void Initialize(params object[] parameters)
     {
         Id = (int)parameters[0];
-        Color = (Color)parameters[1];
+        Amount = (int)parameters[1];
     }
 }

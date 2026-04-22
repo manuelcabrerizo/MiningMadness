@@ -14,9 +14,4 @@ public class Gem : MonoBehaviour
     {
         IsOccupy = false;
     }
-
-    public void Deposite()
-    { 
-        Destroy(gameObject);
-    }
 }

@@ -47,6 +47,7 @@ public class Agent : MonoBehaviour
 
     private void OnDestroy()
     {
+        OnShutdown();
         EventBus.Instance.Unsubscribe<ChangePathfindingStrategyEvent>(OnPathfindingStrategyChange);
     }
 
@@ -114,6 +115,7 @@ public class Agent : MonoBehaviour
 
     protected virtual void OnAwaken() { }
     protected virtual void OnStart() { }
+    protected virtual void OnShutdown() { }
     protected virtual void OnUpdate() { }
 
 #if UNITY_EDITOR
