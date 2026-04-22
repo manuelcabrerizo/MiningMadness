@@ -5,7 +5,7 @@ public class EnemyAttackState : FsmState<Enemy>
 {
     TaskScheduler taskScheduler = null;
     private float updateMinerPositionRatio = 1.0f;
-    private float minerScapeDistance = 5.0f;
+    private float minerScapeDistance = 10.0f;
 
     public override void OnInitialize()
     {

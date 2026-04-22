@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public class MinerDepositGoldState : FsmState<Miner>
+public class MinerDepositGemState : FsmState<Miner>
 {
     private TaskScheduler taskScheduler = null;
     private float gemsDepositeRatio = 1.0f;

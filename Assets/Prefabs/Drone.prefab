@@ -303,12 +303,21 @@ MonoBehaviour:
   onGemDeposited:
     m_PersistentCalls:
       m_Calls: []
+  onEnemyAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  onEscapeFromEnemy:
+    m_PersistentCalls:
+      m_Calls: []
   gemLayer:
     serializedVersion: 2
     m_Bits: 256
   baseLayer:
     serializedVersion: 2
     m_Bits: 512
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &727769173525849851
 MonoBehaviour:
   m_ObjectHideFlags: 0
