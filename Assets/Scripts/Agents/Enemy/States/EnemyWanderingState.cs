@@ -13,13 +13,13 @@ public class EnemyWanderingState : FsmState<Enemy>
 
     public override void OnEnter()
     {
+        taskScheduler.Clear();
         SetRandomDestination();
         taskScheduler.Schedule(SearchForMiner, Random.Range(minSearchInterval, maxSearchInterval));
     }
 
     public override void OnExit()
     {
-        taskScheduler.Clear();
     }
 
     public override void OnUpdate(float deltaTime)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -18,10 +17,12 @@ public class UIManager : MonoBehaviour
         EventBus.Instance.Subscribe<MinerSpawnEvent>(OnMinerSpawn);
         EventBus.Instance.Subscribe<MinerModifyGemsEvent>(OnMinerModifyGems);
         EventBus.Instance.Subscribe<GemsAmountChangeEvent>(OnGemsAmountChange);
+        EventBus.Instance.Subscribe<MinerDieEvent>(OnMinerDie);
     }
 
     private void OnDestroy()
     {
+        EventBus.Instance.Unsubscribe<MinerDieEvent>(OnMinerDie);
         EventBus.Instance.Unsubscribe<GemsAmountChangeEvent>(OnGemsAmountChange);
         EventBus.Instance.Unsubscribe<MinerModifyGemsEvent>(OnMinerModifyGems);
         EventBus.Instance.Unsubscribe<MinerSpawnEvent>(OnMinerSpawn);
@@ -57,5 +58,12 @@ public class UIManager : MonoBehaviour
     private void OnGemsAmountChange(in GemsAmountChangeEvent gemsAmountChangeEvent)
     {
         gemInfo.SetText(gemsAmountChangeEvent.Amount.ToString());
+    }
+
+    private void OnMinerDie(in MinerDieEvent minerDieEvent)
+    {
+        MinerInfo minerInfo = minerInfos[minerDieEvent.Id];
+        minerInfos.Remove(minerDieEvent.Id);
+        Destroy(minerInfo.gameObject);
     }
 }

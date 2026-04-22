@@ -12,12 +12,12 @@ public class MinerDepositGemState : FsmState<Miner>
     }
     public override void OnEnter()
     {
+        taskScheduler.Clear();
         taskScheduler.Schedule(DepositeGem, gemsDepositeRatio);
     }
 
     public override void OnExit()
     {
-        taskScheduler.Clear();
     }
 
     public override void OnUpdate(float deltaTime)

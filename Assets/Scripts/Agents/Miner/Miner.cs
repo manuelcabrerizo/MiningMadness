@@ -1,7 +1,7 @@
-using UnityEditor.ShaderGraph.Internal;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.UI.GridLayoutGroup;
+using UnityEngine.UI;
 
 public class Miner : Agent
 {
@@ -19,12 +19,17 @@ public class Miner : Agent
     public LayerMask baseLayer;
     public LayerMask enemyLayer;
 
+    [SerializeField] private Image lifebar;
+    [SerializeField] private int maxLife = 100;
+
     public Gem TargetGem { get; set; } = null;
     public Color Color => color;
+    public int Id => id;
 
     private int id;
     private Color color;
 
+    private int life = 0;
     private int gemsCapasity = 10;
     private int gemsAmount;
     private float searchRadius = 5.0f;
@@ -57,9 +62,10 @@ public class Miner : Agent
         fleeState.Initialize(this);
 
         id = generation++;
-        color = Random.ColorHSV();
+        color = UnityEngine.Random.ColorHSV();
         gemsAmount = 0;
         taskScheduler = new TaskScheduler();
+        life = maxLife;
     }
 
     protected override void OnStart()
@@ -72,6 +78,7 @@ public class Miner : Agent
         fsm.ConfigureTransition(idleState, moveToGemState, onGemFound);
         fsm.ConfigureTransition(moveToGemState, miningState, onGemReach);
         fsm.ConfigureTransition(miningState, moveToBaseState, onGemCollected);
+        fsm.ConfigureTransition(idleState, moveToBaseState, onGemCollected);
         fsm.ConfigureTransition(moveToBaseState, depositGemState, onBaseReach);
         fsm.ConfigureTransition(depositGemState, idleState, onGemDeposited);
 
@@ -129,5 +136,21 @@ public class Miner : Agent
             onEnemyAttack?.Invoke();
         }
         taskScheduler.Schedule(SearchForCloseEnemies, searchTimeRatio);
+    }
+
+    public bool TakeDamage(int damage)
+    {
+        life = Math.Max(life - damage, 0);
+        lifebar.fillAmount = (float)life / (float)maxLife;
+        if (life == 0)
+        {
+            if (TargetGem != null && TargetGem.IsOccupy)
+            {
+                TargetGem.Release();
+            }
+            EventBus.Instance.Raise<MinerDieEvent>(id);
+            Destroy(gameObject);
+        }
+        return life == 0;
     }
 }

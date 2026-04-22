@@ -6,6 +6,9 @@ public class EnemyAttackState : FsmState<Enemy>
     TaskScheduler taskScheduler = null;
     private float updateMinerPositionRatio = 1.0f;
     private float minerScapeDistance = 10.0f;
+    private float attackRadio = 5.0f;
+    private float attackTimeRatio = 0.5f;
+    private int attackForce = 10;
 
     public override void OnInitialize()
     {
@@ -14,12 +17,13 @@ public class EnemyAttackState : FsmState<Enemy>
 
     public override void OnEnter()
     {
+        taskScheduler.Clear();
         taskScheduler.Schedule(UpdateMinerPosition, updateMinerPositionRatio);
+        taskScheduler.Schedule(Attack, attackTimeRatio);
     }
 
     public override void OnExit()
     {
-        taskScheduler.Clear();
     }
 
     public override void OnUpdate(float deltaTime)
@@ -29,16 +33,36 @@ public class EnemyAttackState : FsmState<Enemy>
 
     private void UpdateMinerPosition()
     {
-        Debug.Log("Update Miner Position");
+        if (owner.TargetMiner == null)
+        {
+            return;
+        }
+
         Vector3 enemyPosition = owner.transform.position;
         Vector3 minerPosition = owner.TargetMiner.transform.position;
         if ((minerPosition - enemyPosition).sqrMagnitude > (minerScapeDistance * minerScapeDistance))
         {
-            Debug.Log("Miner Scape");
             owner.TargetMiner = null;
             owner.onMinerScape?.Invoke();
         }
         owner.SetDestination(minerPosition);
         taskScheduler.Schedule(UpdateMinerPosition, updateMinerPositionRatio);
+    }
+
+    private void Attack()
+    {
+        Collider[] colliders = Physics.OverlapSphere(owner.transform.position, attackRadio, owner.minerLayer);
+        foreach (Collider collider in colliders)
+        {
+            Miner miner = collider.gameObject.GetComponent<Miner>();
+            if (miner.Id == owner.TargetMiner.Id)
+            {
+                if (miner.TakeDamage(attackForce))
+                {
+                    return;
+                }
+            }
+        }
+        taskScheduler.Schedule(Attack, attackTimeRatio);
     }
 }

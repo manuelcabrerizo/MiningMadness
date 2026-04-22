@@ -15,6 +15,7 @@ public class MinerFleeState : FsmState<Miner>
 
     public override void OnEnter()
     {
+        taskScheduler.Clear();
         if (owner.TargetGem != null)
         {
             owner.TargetGem.Release();
@@ -52,6 +53,9 @@ public class MinerFleeState : FsmState<Miner>
         {
             owner.onEscapeFromEnemy?.Invoke();
         }
-        taskScheduler.Schedule(CheckForCloseEnemies, checkForEnemiesInterval);
+        else
+        {
+            taskScheduler.Schedule(CheckForCloseEnemies, checkForEnemiesInterval);
+        }
     }
 }

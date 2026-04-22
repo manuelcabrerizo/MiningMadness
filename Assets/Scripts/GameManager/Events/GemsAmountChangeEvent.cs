@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class GemsAmountChangeEvent : Event
 {
     public int Amount;

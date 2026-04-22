@@ -13,12 +13,19 @@ public class MinerIdleState : FsmState<Miner>
     
     public override void OnEnter()
     {
-        taskScheduler.Schedule(SearchGem, searchRate);
+        taskScheduler.Clear();
+        if (owner.IsFull())
+        {
+            owner.onGemCollected?.Invoke();
+        }
+        else
+        {
+            taskScheduler.Schedule(SearchGem, searchRate);
+        }
     }
     
     public override void OnExit()
     {
-        taskScheduler.Clear();
     }
 
     public override void OnUpdate(float deltaTime)

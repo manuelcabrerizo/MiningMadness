@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class Enemy : Agent
 {
@@ -27,6 +29,8 @@ public class Enemy : Agent
         wanderingState.Initialize(this);
         searchState.Initialize(this);
         attackState.Initialize(this);
+
+        EventBus.Instance.Subscribe<MinerDieEvent>(OnMinerDie);
     }
 
     protected override void OnStart()
@@ -45,10 +49,20 @@ public class Enemy : Agent
 
     protected override void OnShutdown()
     {
+        EventBus.Instance.Unsubscribe<MinerDieEvent>(OnMinerDie);
     }
 
     protected override void OnUpdate()
     {
         fsm.Update(Time.deltaTime);
+    }
+
+    private void OnMinerDie(in MinerDieEvent minerEvent)
+    {
+        if (TargetMiner != null && minerEvent.Id == TargetMiner.Id)
+        {
+            TargetMiner = null;
+            onMinerDie?.Invoke();
+        }
     }
 }
