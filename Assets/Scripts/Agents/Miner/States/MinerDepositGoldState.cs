@@ -5,8 +5,7 @@ using UnityEngine;
 public class MinerDepositGoldState : FsmState<Miner>
 {
     private TaskScheduler taskScheduler = null;
-    private float gemsDepositeRatio = 2.0f;
-    private float depositTimeDuration = 11.0f;
+    private float gemsDepositeRatio = 1.0f;
     public override void OnInitialize()
     {
         taskScheduler = new TaskScheduler();
@@ -14,7 +13,6 @@ public class MinerDepositGoldState : FsmState<Miner>
     public override void OnEnter()
     {
         taskScheduler.Schedule(DepositeGem, gemsDepositeRatio);
-        taskScheduler.Schedule(FinishDeposit, depositTimeDuration);
     }
 
     public override void OnExit()
@@ -29,13 +27,15 @@ public class MinerDepositGoldState : FsmState<Miner>
 
     private void DepositeGem()
     {
-        int gems = owner.GetGems(2);
-        EventBus.Instance.Raise<MinerDepositGemsEvent>(gems);
-        taskScheduler.Schedule(DepositeGem, gemsDepositeRatio);
-    }
-
-    private void FinishDeposit()
-    {
-        owner.onGemDeposited?.Invoke();
+        int gems = owner.GetGems(1);
+        if (gems > 0)
+        {
+            EventBus.Instance.Raise<MinerDepositGemsEvent>(gems);
+            taskScheduler.Schedule(DepositeGem, gemsDepositeRatio);
+        }
+        else
+        {
+            owner.onGemDeposited?.Invoke();
+        }
     }
 }

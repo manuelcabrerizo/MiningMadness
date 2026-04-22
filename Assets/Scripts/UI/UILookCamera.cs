@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MinerColor : MonoBehaviour
+public class UILookCamera : MonoBehaviour
 {
     [SerializeField] private GameObject colorUI;
     [SerializeField] private Image color;
@@ -9,13 +9,16 @@ public class MinerColor : MonoBehaviour
 
     private void Start()
     {
-        Miner miner = GetComponent<Miner>();
-        color.color = miner.Color;
+        Miner miner = null;
+        if (TryGetComponent<Miner>(out miner))
+        {
+            color.color = miner.Color;
+        }
     }
 
     void LateUpdate()
     {
         colorUI.transform.position = transform.position + offset;
-        colorUI.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward * -1.0f);
+        colorUI.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
     }
 }

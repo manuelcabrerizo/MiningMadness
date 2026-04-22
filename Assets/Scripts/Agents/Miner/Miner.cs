@@ -19,6 +19,8 @@ public class Miner : Agent
 
     private int id;
     private Color color;
+
+    private int gemsCapasity = 10;
     private int gemsAmount;
 
     private FsmStateMachine<Miner> fsm = null;
@@ -74,7 +76,7 @@ public class Miner : Agent
 
     public void AddGems(int value)
     {
-        gemsAmount += value;
+        gemsAmount = Mathf.Min(gemsAmount + value, gemsCapasity);
         EventBus.Instance.Raise<MinerModifyGemsEvent>(id, gemsAmount);
     }
 
@@ -88,5 +90,10 @@ public class Miner : Agent
         gemsAmount -= result;
         EventBus.Instance.Raise<MinerModifyGemsEvent>(id, gemsAmount);
         return result;
+    }
+
+    public bool IsFull()
+    {
+        return gemsAmount == gemsCapasity;
     }
 }
